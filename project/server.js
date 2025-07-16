@@ -23,26 +23,6 @@ app.get("/customers", async (req, res) => {
   }
 });
 
-// app.post("/customers", async (req, res) => {
-//   const newCustomer = req.body;
-//   if (newCustomer === null || req.body != {}) {
-//     res.status(400);
-//     res.send("missing request body");
-//   } else {
-//     // return array format [status, id, errMessage]
-//     const [status, id, errMessage] = await da.addCustomer(newCustomer);
-//     if (status === "success") {
-//       res.status(201);
-//       let response = { ...newCustomer };
-//       response["_id"] = id;
-//       res.send(response);
-//     } else {
-//       res.status(400);
-//       res.send(errMessage);
-//     }
-//   }
-// });
-
 app.post("/customers", async (req, res) => {
   const newCustomer = req.body;
 
