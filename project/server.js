@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 
 const path = require("path"); // for handling file paths
 const da = require("./data-access"); // import data access module
-
+// const checkApiKey = require("./security").checkApiKey;
 const app = express();
 const port = process.env.PORT || 4000; // use env var or default to 4000
 
@@ -13,7 +13,21 @@ app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, "public")));
 
-app.get("/customers", async (req, res) => {
+const API_KEY = process.env.API_KEY || "fox-api-key";
+
+function checkApiKey(req, res, next) {
+  const apiKey = req.query.api_key || req.headers["x-api-key"];
+
+  if (apiKey === API_KEY) {
+    next();
+  } else {
+    res.status(403).send("Forbidden: Invalid API Key");
+  }
+}
+
+// app.use(checkApiKey);
+
+app.get("/customers", checkApiKey, async (req, res) => {
   const [cust, err] = await da.getCustomers();
   if (cust) {
     res.send(cust);
@@ -21,9 +35,10 @@ app.get("/customers", async (req, res) => {
     res.status(500);
     res.send(err);
   }
+  yes;
 });
 
-app.post("/customers", async (req, res) => {
+app.post("/customers", checkApiKey, async (req, res) => {
   const newCustomer = req.body;
 
   if (!newCustomer || Object.keys(newCustomer).length === 0) {
@@ -40,7 +55,7 @@ app.post("/customers", async (req, res) => {
   }
 });
 
-app.get("/customers/:id", async (req, res) => {
+app.get("/customers/:id", checkApiKey, async (req, res) => {
   const id = req.params.id;
   // return array [customer, errMessage]
   const [cust, err] = await da.getCustomerById(id);
@@ -52,7 +67,7 @@ app.get("/customers/:id", async (req, res) => {
   }
 });
 
-app.put("/customers/:id", async (req, res) => {
+app.put("/customers/:id", checkApiKey, async (req, res) => {
   const id = req.params.id;
   const updatedCustomer = req.body;
 
@@ -72,7 +87,7 @@ app.put("/customers/:id", async (req, res) => {
   }
 });
 
-app.delete("/customers/:id", async (req, res) => {
+app.delete("/customers/:id", checkApiKey, async (req, res) => {
   const id = req.params.id;
   // return array [message, errMessage]
   const [message, errMessage] = await da.deleteCustomerById(id);
@@ -84,7 +99,7 @@ app.delete("/customers/:id", async (req, res) => {
   }
 });
 
-app.get("/reset", async (req, res) => {
+app.get("/reset", checkApiKey, async (req, res) => {
   const [result, err] = await da.resetCustomers();
   if (result) {
     res.send(result);
