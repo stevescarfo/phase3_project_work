@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 
 const path = require("path"); // for handling file paths
 const da = require("./data-access"); // import data access module
-// const checkApiKey = require("./security").checkApiKey;
+const checkApiKey = require("./security").checkApiKey;
 const app = express();
 const port = process.env.PORT || 4000; // use env var or default to 4000
 
@@ -13,17 +13,17 @@ app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, "public")));
 
-const API_KEY = process.env.API_KEY || "fox-api-key";
+// const API_KEY = process.env.API_KEY || "fox-api-key";
 
-function checkApiKey(req, res, next) {
-  const apiKey = req.query.api_key || req.headers["x-api-key"];
+// function checkApiKey(req, res, next) {
+//   const apiKey = req.query.api_key || req.headers["x-api-key"];
 
-  if (apiKey === API_KEY) {
-    next();
-  } else {
-    res.status(403).send("Forbidden: Invalid API Key");
-  }
-}
+//   if (apiKey === API_KEY) {
+//     next();
+//   } else {
+//     res.status(403).send("Forbidden: Invalid API Key");
+//   }
+// }
 
 // app.use(checkApiKey);
 
