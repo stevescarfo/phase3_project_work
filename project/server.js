@@ -13,20 +13,6 @@ app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, "public")));
 
-// const API_KEY = process.env.API_KEY || "fox-api-key";
-
-// function checkApiKey(req, res, next) {
-//   const apiKey = req.query.api_key || req.headers["x-api-key"];
-
-//   if (apiKey === API_KEY) {
-//     next();
-//   } else {
-//     res.status(403).send("Forbidden: Invalid API Key");
-//   }
-// }
-
-// app.use(checkApiKey);
-
 app.get("/customers", checkApiKey, async (req, res) => {
   const [cust, err] = await da.getCustomers();
   if (cust) {

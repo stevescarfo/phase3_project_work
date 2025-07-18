@@ -1,4 +1,4 @@
-const API_KEY = process.env.API_KEY || "fox-api-key";
+const API_KEY = process.env.API_KEY || "foxkey";
 
 function checkApiKey(req, res, next) {
   const apiKey = req.query.api_key || req.headers["x-api-key"];
