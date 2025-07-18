@@ -24,6 +24,32 @@ app.get("/customers", checkApiKey, async (req, res) => {
   yes;
 });
 
+app.get("/customers/find/", async (req, res) => {
+  let id = +req.query.id;
+  let email = req.query.email;
+  let password = req.query.password;
+  let query = null;
+  if (id > -1) {
+    query = { id: id };
+  } else if (email) {
+    query = { email: email };
+  } else if (password) {
+    query = { password: password };
+  }
+  if (query) {
+    const [customers, err] = await da.findCustomers(query);
+    if (customers) {
+      res.send(customers);
+    } else {
+      res.status(404);
+      res.send(err);
+    }
+  } else {
+    res.status(400);
+    res.send("query string is required");
+  }
+});
+
 app.post("/customers", checkApiKey, async (req, res) => {
   const newCustomer = req.body;
 
